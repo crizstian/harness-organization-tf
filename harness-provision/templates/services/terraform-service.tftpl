@@ -1,0 +1,11 @@
+service:
+  name: ${name}
+  identifier: ${identifier}
+  description: ${description}
+  tags: {}
+  serviceDefinition:
+    spec:
+      customDeploymentRef:
+        templateRef: ${template-deployment.template_id}
+        versionLabel: "${template-deployment.template_version}"
+    type: CustomDeployment

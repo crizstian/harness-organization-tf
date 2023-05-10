@@ -1,0 +1,16 @@
+infrastructureDefinition:
+  name: ${name}
+  identifier: ${identifier}
+  description: ${description}
+  tags: {}
+  orgIdentifier: ${org_id}
+  projectIdentifier: ${project_id}
+  environmentRef: ${env_id}
+  deploymentType: CustomDeployment
+  type: CustomDeployment
+  spec:
+    customDeploymentRef:
+      templateRef: ${template-deployment.template_id}
+      versionLabel: "${template-deployment.template_version}"
+    variables: []
+  allowSimultaneousDeployments: false

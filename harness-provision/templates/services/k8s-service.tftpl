@@ -1,0 +1,37 @@
+service:
+  name: ${name}
+  identifier: ${identifier}
+  description: ${description}
+  tags:
+    Tecnologia: kubernetes
+  gitOpsEnabled: false
+  serviceDefinition:
+    type: Kubernetes
+    spec:
+      artifacts:
+        primary:
+          primaryArtifactRef: <+input>
+          sources:
+            - identifier: GCR
+              type: Gcr
+              spec:
+                connectorRef: <+input>
+                registryHostname: "us.gcr.io"
+                imagePath: ${GC_PROJECT}-<+env.name>/${DOCKER_IMAGE_NAME}
+                tag: <+input>
+      manifests:
+        - manifest:
+            identifier: k8s
+            type: K8sManifest
+            spec:
+              store:
+                type: GitLab
+                spec:
+                  connectorRef: <+input>
+                  gitFetchType: Branch
+                  paths:
+                    - harness-manifests/${GC_PROJECT}/<+env.name>/${ARTEFACTO_ID}
+                  repoName: ${DOCKER_GKE_GIT_REPO}
+                  branch: ${manifests.branch}
+              valuesPaths:
+                - harness-manifests/${GC_PROJECT}/<+env.name>/${ARTEFACTO_ID}/values.yaml

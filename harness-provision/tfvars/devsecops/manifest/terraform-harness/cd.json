@@ -1,0 +1,11 @@
+{
+    "CD": {
+        "ENV": {
+            "HARNESS": {
+                "enable": true,
+                "infrastructure_id": "harness",
+                "type": "Production"
+            }
+        }
+    }
+}

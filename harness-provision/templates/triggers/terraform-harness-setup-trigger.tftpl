@@ -1,0 +1,76 @@
+trigger:
+  name: ${name}
+  identifier: ${identifier}
+  orgIdentifier: ${org_id}
+  projectIdentifier: ${project_id}
+  pipelineIdentifier: ${pipeline_id}
+  enabled: true
+  description: ${description}
+  tags: {}
+  source:
+    type: Webhook
+    spec:
+      type: Gitlab
+      spec:
+        type: MergeRequest
+        spec:
+          connectorRef: ${github_connector_id}
+          autoAbortPreviousExecutions: true
+          payloadConditions:
+            - key: targetBranch
+              operator: In
+              value: ${TARGET_BRANCH}
+          headerConditions: []
+          repoName: ${TERRAFORM_REPO}
+          actions:
+            - Open
+            - Reopen
+            - Sync
+            - Update
+  inputYaml: |
+    pipeline:
+      identifier: ${pipeline_id}
+      template:
+        templateInputs:
+          stages:
+            - stage:
+                identifier: Terraform
+                type: Deployment
+                spec:
+                  service:
+                    serviceRef: ${service_id}
+                  environment:
+                    environmentRef: ${env_id}
+                    infrastructureDefinitions:
+                      - identifier: ${infrastructure_id}_${suffix}
+                variables:
+                  - name: GCS_BUCKET
+                    type: String
+                    value: ${GCS_BUCKET}
+                  - name: GCS_PREFIX
+                    type: String
+                    value: ${GCS_PREFIX}
+                  - name: HARNESS_ACCOUNT_ID
+                    type: String
+                    value: ${HARNESS_ACCOUNT_ID}
+                  - name: HARNESS_PLATFORM_API_KEY
+                    type: Secret
+                    value: ${HARNESS_PLATFORM_API_KEY}
+                  - name: GOOGLE_BACKEND_CREDENTIALS
+                    type: Secret
+                    value: ${GOOGLE_BACKEND_CREDENTIALS}
+                  - name: TERRAFORM_WORKSPACE
+                    type: String
+                    value: ${TERRAFORM_WORKSPACE}
+                  - name: TERRAFORM_ACTION
+                    type: String
+                    value: ${TERRAFORM_ACTION}
+                  - name: TERRAFORM_REPO
+                    type: String
+                    value: ${TERRAFORM_REPO}
+                  - name: TERRAFORM_FOLDER
+                    type: String
+                    value: ${TERRAFORM_FOLDER}
+                  - name: TERRAFORM_BRANCH
+                    type: String
+                    value: ${TERRAFORM_BRANCH}
