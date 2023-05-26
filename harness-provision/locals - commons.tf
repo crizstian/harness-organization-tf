@@ -24,6 +24,7 @@ locals {
       gcp_connector_id    = local.all_connectors.gcp_connectors[var.harness_platform_default_connectors.gcp_connector].identifier
       github_connector_id = local.all_connectors.github_connectors[var.harness_platform_default_connectors.github_connector].identifier
       gitlab_connector_id = local.all_connectors.gitlab_connectors[var.harness_platform_default_connectors.gitlab_connector].identifier
+      k8s_connector_id    = local.all_connectors.kubernetes_connectors[var.harness_platform_default_connectors.kubernetes_connector].identifier
     }
   }
 
@@ -43,5 +44,4 @@ locals {
       ]...
     )
   }
-
 }

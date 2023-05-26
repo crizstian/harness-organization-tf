@@ -1,0 +1,28 @@
+trigger:
+  name: ${name}
+  identifier: ${identifier}
+  orgIdentifier: ${org_id}
+  projectIdentifier: ${project_id}
+  pipelineIdentifier: ${pipeline_id}
+  enabled: true
+  description: ""
+  tags: {}
+  source:
+    type: Webhook
+    spec:
+      type: Gitlab
+      spec:
+        type: MergeRequest
+        spec:
+          connectorRef: ${git_connector_id}
+          autoAbortPreviousExecutions: true
+          payloadConditions: []
+          headerConditions: []
+          repoName: ${git_repo_name}
+          actions:
+            - Open
+            - Reopen
+            - Update
+            - Sync
+  inputSetRefs:
+    ${indent(4, yamlencode(inputset_ids))}

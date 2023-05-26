@@ -9,6 +9,18 @@ inputSet:
       templateInputs:
         stages:
           - stage:
+              identifier: Terraform_STO
+              template:
+                templateInputs:
+                  type: SecurityTests
+                  variables:
+                    - name: k8s_connector_ref
+                      type: String
+                      value: ${k8s_connector_id}
+                    - name: docker_connector_ref
+                      type: String
+                      value: ${docker_connector_id}
+          - stage:
               identifier: Terraform
               type: Deployment
               spec:
@@ -49,3 +61,12 @@ inputSet:
                 - name: TERRAFORM_BRANCH
                   type: String
                   value: "${TERRAFORM_BRANCH}"
+        properties:
+          ci:
+            codebase:
+              connectorRef: ${github_connector_id}
+              repoName: ${TERRAFORM_REPO}
+              build:
+                type: branch
+                spec:
+                  branch: "${TERRAFORM_BRANCH}"

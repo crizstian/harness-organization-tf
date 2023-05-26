@@ -1,0 +1,309 @@
+trigger:
+  name: ${name}
+  identifier: ${identifier}
+  enabled: true
+  description: ${description}
+  tags: {}
+  orgIdentifier: ${org_id}
+  stagesToExecute: []
+  projectIdentifier: ${project_id}
+  pipelineIdentifier: ${pipeline_id}
+  source:
+    type: Webhook
+    spec:
+      type: Gitlab
+      spec:
+        type: MergeRequest
+        spec:
+          connectorRef: ${git_connector_id}
+          autoAbortPreviousExecutions: true
+          payloadConditions: []
+          headerConditions: []
+          repoName: ${git_repo_name}
+          actions:
+            - Open
+            - Reopen
+            - Update
+            - Sync
+  inputYaml: |
+    pipeline:
+      identifier: ${pipeline_id}
+      template:
+        templateInputs:
+          stages:
+            - stage:
+                identifier: Build
+                template:
+                  templateInputs:
+                    type: CI
+                    spec:
+                      execution:
+                        steps:
+                          - stepGroup:
+                              identifier: Docker_Steps
+                              steps:
+                                - step:
+                                    identifier: Descarga_DockerFile
+                                    type: GitClone
+                                    spec:
+                                      connectorRef: ${git_connector_id}
+                                - step:
+                                    identifier: Build_and_Push
+                                    type: BuildAndPushGCR
+                                    spec:
+                                      connectorRef: ${gcr_connector_id}
+                      infrastructure:
+                        type: KubernetesDirect
+                        spec:
+                          connectorRef: account.build_cluster_kubernetes_connector_B1mc
+                          namespace: xxxxx
+                    variables:
+                      - name: SONARQUBE_PROJECT_KEY
+                        type: String
+                        value: ${SONARQUBE_PROJECT_KEY}
+                      - name: SONARQUBE_TOKEN
+                        type: String
+                        value: ${SONARQUBE_TOKEN}
+                      - name: SONARQUBE_URL
+                        type: String
+                        value: ${SONARQUBE_URL}
+                      - name: ARTEFACTO_ID
+                        type: String
+                        value: ${ARTEFACTO_ID}
+                      - name: ARTEFACTO_GROUP_ID
+                        type: String
+                        value: ${ARTEFACTO_GROUP_ID}
+                      - name: ARTEFACTO_TYPE
+                        type: String
+                        value: ${ARTEFACTO_TYPE}
+                      - name: GC_PROJECT
+                        type: String
+                        value: ${GC_PROJECT}
+                      - name: DOCKER_IMAGE_NAME
+                        type: String
+                        value: ${DOCKER_IMAGE_NAME}
+                      - name: DOCKER_GKE_GIT_REPO
+                        type: String
+                        value: ${DOCKER_GKE_GIT_REPO}
+                      - name: NEXUS_ENDPOINT
+                        type: String
+                        value: ${NEXUS_ENDPOINT}
+                      - name: NEXUS_PACKAGE
+                        type: String
+                        value: ${NEXUS_PACKAGE}
+            - stage:
+                identifier: Despliegue_QA
+                template:
+                  templateInputs:
+                    type: Deployment
+                    spec:
+                      service:
+                        serviceRef: mascotas_backend_app_zm7a
+                        serviceInputs:
+                          serviceDefinition:
+                            type: Kubernetes
+                            spec:
+                              artifacts:
+                                primary:
+                                  primaryArtifactRef: GCR
+                                  sources:
+                                    - identifier: GCR
+                                      type: Gcr
+                                      spec:
+                                        connectorRef: ${gcr_connector_id}
+                                        tag: <+pipeline.stages.build.spec.execution.steps.PreCheck.steps.Gradle_Properties_Config.output.outputVariables.ARTEFACTO_TAG>
+                              manifests:
+                                - manifest:
+                                    identifier: k8s
+                                    type: K8sManifest
+                                    spec:
+                                      store:
+                                        type: GitLab
+                                        spec:
+                                          connectorRef: ${git_connector_id}
+                      environment:
+                        environmentRef: qa_${suffix}
+                        infrastructureDefinitions:
+                          - identifier: ${qa_infrastructure_id}_${suffix}
+                            inputs:
+                              identifier: ${qa_infrastructure_id}_${suffix}
+                              type: KubernetesDirect
+                              spec:
+                                namespace: ${qa_kubernetes_namespace}
+            - stage:
+                identifier: Aprobacion_Torre_UAT
+                template:
+                  templateInputs:
+                    type: Approval
+                    variables:
+                      - name: Torre
+                        type: String
+                        value: <+input>.executionInput()
+            - stage:
+                identifier: Promote_UAT
+                template:
+                  templateInputs:
+                    type: CI
+                    spec:
+                      infrastructure:
+                        type: KubernetesDirect
+                        spec:
+                          connectorRef: ${build_kubernetes_id}
+                          namespace: ${build_kubernetes_namespace}
+                      execution:
+                        steps:
+                          - stepGroup:
+                              identifier: Docker_Steps
+                              steps:
+                                - step:
+                                    identifier: Descarga_DockerFile
+                                    type: GitClone
+                                    spec:
+                                      connectorRef: ${git_connector_id}
+                                - step:
+                                    identifier: Build_and_Push
+                                    type: BuildAndPushGCR
+                                    spec:
+                                      connectorRef: ${gcr_connector_id}
+                    variables:
+                      - name: GC_PROJECT
+                        type: String
+                        value: ${GC_PROJECT}
+                      - name: GC_TECNOLOGIA
+                        type: String
+                        value: ${GC_TECNOLOGIA}
+                      - name: DOCKER_IMAGE_NAME
+                        type: String
+                        value: ${DOCKER_IMAGE_NAME}
+                      - name: DOCKER_GKE_GIT_REPO
+                        type: String
+                        value: ${DOCKER_GKE_GIT_REPO}
+                      - name: ARTEFACTO_ID
+                        type: String
+                        value: ${ARTEFACTO_ID}
+                      - name: ARTEFACTO_GROUP_ID
+                        type: String
+                        value: ${ARTEFACTO_GROUP_ID}
+                      - name: ARTEFACTO_TYPE
+                        type: String
+                        value: ${ARTEFACTO_TYPE}
+                      - name: ENV
+                        type: String
+                        value: uat
+                      - name: NEXUS_ENDPOINT
+                        type: String
+                        value: ${NEXUS_ENDPOINT}
+                      - name: NEXUS_PACKAGE
+                        type: String
+                        value: ${NEXUS_PACKAGE}
+            - stage:
+                identifier: Despliegue_UAT
+                template:
+                  templateInputs:
+                    type: Deployment
+                    spec:
+                      environment:
+                        environmentRef: uat_${suffix}
+                        infrastructureDefinitions:
+                          - identifier: ${uat_infrastructure_id}_${suffix}
+                            inputs:
+                              identifier: ${uat_infrastructure_id}_${suffix}
+                              type: KubernetesDirect
+                              spec:
+                                namespace: ${uat_kubernetes_namespace}
+            - stage:
+                identifier: Aprobacion_Torre_PROD
+                template:
+                  templateInputs:
+                    type: Approval
+                    variables:
+                      - name: RFC
+                        type: String
+                        value: <+input>.executionInput()
+                      - name: NUMERO_TAREA
+                        type: String
+                        value: <+input>.executionInput()
+                      - name: Torre
+                        type: String
+                        value: <+input>.executionInput()
+            - stage:
+                identifier: Promote_Docker_PROD
+                template:
+                  templateInputs:
+                    type: CI
+                    spec:
+                      infrastructure:
+                        type: KubernetesDirect
+                        spec:
+                          connectorRef: ${build_kubernetes_id}
+                          namespace: ${build_kubernetes_namespace}
+                      execution:
+                        steps:
+                          - stepGroup:
+                              identifier: Docker_Steps
+                              steps:
+                                - step:
+                                    identifier: Descarga_DockerFile
+                                    type: GitClone
+                                    spec:
+                                      connectorRef: ${git_connector_id}
+                                - step:
+                                    identifier: Build_and_Push
+                                    type: BuildAndPushGCR
+                                    spec:
+                                      connectorRef: ${gcr_connector_id}
+                    variables:
+                      - name: GC_PROJECT
+                        type: String
+                        value: ${GC_PROJECT}
+                      - name: GC_TECNOLOGIA
+                        type: String
+                        value: ${GC_TECNOLOGIA}
+                      - name: DOCKER_IMAGE_NAME
+                        type: String
+                        value: ${DOCKER_IMAGE_NAME}
+                      - name: DOCKER_GKE_GIT_REPO
+                        type: String
+                        value: ${DOCKER_GKE_GIT_REPO}
+                      - name: ARTEFACTO_ID
+                        type: String
+                        value: ${ARTEFACTO_ID}
+                      - name: ARTEFACTO_GROUP_ID
+                        type: String
+                        value: ${ARTEFACTO_GROUP_ID}
+                      - name: ARTEFACTO_TYPE
+                        type: String
+                        value: ${ARTEFACTO_TYPE}
+                      - name: ENV
+                        type: String
+                        value: pro
+                      - name: NEXUS_ENDPOINT
+                        type: String
+                        value: ${NEXUS_ENDPOINT}
+                      - name: NEXUS_PACKAGE
+                        type: String
+                        value: ${NEXUS_PACKAGE}
+            - stage:
+                identifier: Despliegue_PROD
+                template:
+                  templateInputs:
+                    type: Deployment
+                    spec:
+                      environment:
+                        environmentRef: pro_${suffix}
+                        infrastructureDefinitions:
+                          - identifier: ${pro_infrastructure_id}_${suffix}
+                            inputs:
+                              identifier: ${pro_infrastructure_id}_${suffix}
+                              type: KubernetesDirect
+                              spec:
+                                namespace: ${pro_kubernetes_namespace}
+          properties:
+            ci:
+              codebase:
+                connectorRef: ${git_connector_id}
+                repoName: ${git_repo_name}
+                build:
+                  type: PR
+                  spec:
+                    number: <+trigger.prNumber>

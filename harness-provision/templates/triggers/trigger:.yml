@@ -1,0 +1,309 @@
+trigger:
+  name: build
+  identifier: build
+  enabled: true
+  description: ""
+  tags: {}
+  orgIdentifier: kubernetes_B1mc
+  stagesToExecute: []
+  projectIdentifier: mascotas_B1mc
+  pipelineIdentifier: build_java_and_full_deployment_pipeline_k8s_zm7a
+  source:
+    type: Webhook
+    spec:
+      type: Gitlab
+      spec:
+        type: MergeRequest
+        spec:
+          connectorRef: account.gnp_gitlab_gitlab_connector_ujj8
+          autoAbortPreviousExecutions: true
+          payloadConditions: []
+          headerConditions: []
+          repoName: cotizadores/gke-gnp-mascotas-backed
+          actions:
+            - Open
+            - Reopen
+            - Update
+            - Sync
+  inputYaml: |
+    pipeline:
+      identifier: build_java_and_full_deployment_pipeline_k8s_zm7a
+      template:
+        templateInputs:
+          stages:
+            - stage:
+                identifier: Build
+                template:
+                  templateInputs:
+                    type: CI
+                    spec:
+                      execution:
+                        steps:
+                          - stepGroup:
+                              identifier: Docker_Steps
+                              steps:
+                                - step:
+                                    identifier: Descarga_DockerFile
+                                    type: GitClone
+                                    spec:
+                                      connectorRef: "account.gnp_gcp_key_gcp_connector_ujj8"
+                                - step:
+                                    identifier: Build_and_Push
+                                    type: BuildAndPushGCR
+                                    spec:
+                                      connectorRef: account.gnp_gcp_key_gcp_connector_ujj8
+                      infrastructure:
+                        type: KubernetesDirect
+                        spec:
+                          connectorRef: account.build_cluster_kubernetes_connector_B1mc
+                          namespace: default
+                    variables:
+                      - name: SONARQUBE_PROJECT_KEY
+                        type: String
+                        value: 4fd9b0202b3a93e3657dcd99a4e79a2ed981a32c
+                      - name: SONARQUBE_TOKEN
+                        type: String
+                        value: 2e172824c68fdc2dc24d8a482048910b0a1ef35d
+                      - name: SONARQUBE_URL
+                        type: String
+                        value: http://10.67.0.25:9000
+                      - name: ARTEFACTO_ID
+                        type: String
+                        value: gke-gnp-mascotas-backed
+                      - name: ARTEFACTO_GROUP_ID
+                        type: String
+                        value: mx/com/gnp/service
+                      - name: ARTEFACTO_TYPE
+                        type: String
+                        value: jar
+                      - name: GC_PROJECT
+                        type: String
+                        value: gnp-mascotas
+                      - name: DOCKER_IMAGE_NAME
+                        type: String
+                        value: mascotas-backend-app
+                      - name: DOCKER_GKE_GIT_REPO
+                        type: String
+                        value: GCP/gke-config-files
+                      - name: NEXUS_ENDPOINT
+                        type: String
+                        value: http://nexus.gnp.mx
+                      - name: NEXUS_PACKAGE
+                        type: String
+                        value: repository/maven-releases
+            - stage:
+                identifier: Despliegue_QA
+                template:
+                  templateInputs:
+                    type: Deployment
+                    spec:
+                      service:
+                        serviceRef: mascotas_backend_app_zm7a
+                        serviceInputs:
+                          serviceDefinition:
+                            type: Kubernetes
+                            spec:
+                              artifacts:
+                                primary:
+                                  primaryArtifactRef: GCR
+                                  sources:
+                                    - identifier: GCR
+                                      type: Gcr
+                                      spec:
+                                        connectorRef: account.gnp_gcp_key_gcp_connector_ujj8
+                                        tag: <+pipeline.stages.build.spec.execution.steps.PreCheck.steps.Gradle_Properties_Config.output.outputVariables.ARTEFACTO_TAG>
+                              manifests:
+                                - manifest:
+                                    identifier: k8s
+                                    type: K8sManifest
+                                    spec:
+                                      store:
+                                        type: GitLab
+                                        spec:
+                                          connectorRef: account.gnp_gitlab_gitlab_connector_ujj8
+                      environment:
+                        environmentRef: qa_zm7a
+                        infrastructureDefinitions:
+                          - identifier: gke_gnp_mascotas_qa_zm7a
+                            inputs:
+                              identifier: gke_gnp_mascotas_qa_zm7a
+                              type: KubernetesDirect
+                              spec:
+                                namespace: default
+            - stage:
+                identifier: Aprobacion_Torre_UAT
+                template:
+                  templateInputs:
+                    type: Approval
+                    variables:
+                      - name: Torre
+                        type: String
+                        value: <+input>.executionInput()
+            - stage:
+                identifier: Promote_UAT
+                template:
+                  templateInputs:
+                    type: CI
+                    spec:
+                      infrastructure:
+                        type: KubernetesDirect
+                        spec:
+                          connectorRef: account.build_cluster_kubernetes_connector_B1mc
+                          namespace: default
+                      execution:
+                        steps:
+                          - stepGroup:
+                              identifier: Docker_Steps
+                              steps:
+                                - step:
+                                    identifier: Descarga_DockerFile
+                                    type: GitClone
+                                    spec:
+                                      connectorRef: "account.gnp_gcp_key_gcp_connector_ujj8"
+                                - step:
+                                    identifier: Build_and_Push
+                                    type: BuildAndPushGCR
+                                    spec:
+                                      connectorRef: account.gnp_gcp_key_gcp_connector_ujj8
+                    variables:
+                      - name: GC_PROJECT
+                        type: String
+                        value: gnp-mascotas
+                      - name: GC_TECNOLOGIA
+                        type: String
+                        value: standard
+                      - name: DOCKER_IMAGE_NAME
+                        type: String
+                        value: mascotas-backend-app
+                      - name: DOCKER_GKE_GIT_REPO
+                        type: String
+                        value: GCP/gke-config-files
+                      - name: ARTEFACTO_ID
+                        type: String
+                        value: gke-gnp-mascotas-backed
+                      - name: ARTEFACTO_GROUP_ID
+                        type: String
+                        value: mx/com/gnp/service
+                      - name: ARTEFACTO_TYPE
+                        type: String
+                        value: jar
+                      - name: ENV
+                        type: String
+                        value: uat
+                      - name: NEXUS_ENDPOINT
+                        type: String
+                        value: http://nexus.gnp.mx
+                      - name: NEXUS_PACKAGE
+                        type: String
+                        value: repository/maven-releases
+            - stage:
+                identifier: Despliegue_UAT
+                template:
+                  templateInputs:
+                    type: Deployment
+                    spec:
+                      environment:
+                        environmentRef: uat_zm7a
+                        infrastructureDefinitions:
+                          - identifier: gke_gnp_mascotas_uat_zm7a
+                            inputs:
+                              identifier: gke_gnp_mascotas_uat_zm7a
+                              type: KubernetesDirect
+                              spec:
+                                namespace: default
+            - stage:
+                identifier: Aprobacion_Torre_PROD
+                template:
+                  templateInputs:
+                    type: Approval
+                    variables:
+                      - name: RFC
+                        type: String
+                        value: <+input>.executionInput()
+                      - name: NUMERO_TAREA
+                        type: String
+                        value: <+input>.executionInput()
+                      - name: Torre
+                        type: String
+                        value: <+input>.executionInput()
+            - stage:
+                identifier: Promote_Docker_PROD
+                template:
+                  templateInputs:
+                    type: CI
+                    spec:
+                      infrastructure:
+                        type: KubernetesDirect
+                        spec:
+                          connectorRef: account.build_cluster_kubernetes_connector_B1mc
+                          namespace: default
+                      execution:
+                        steps:
+                          - stepGroup:
+                              identifier: Docker_Steps
+                              steps:
+                                - step:
+                                    identifier: Descarga_DockerFile
+                                    type: GitClone
+                                    spec:
+                                      connectorRef: "account.gnp_gcp_key_gcp_connector_ujj8"
+                                - step:
+                                    identifier: Build_and_Push
+                                    type: BuildAndPushGCR
+                                    spec:
+                                      connectorRef: account.gnp_gcp_key_gcp_connector_ujj8
+                    variables:
+                      - name: GC_PROJECT
+                        type: String
+                        value: gnp-mascotas
+                      - name: GC_TECNOLOGIA
+                        type: String
+                        value: standard
+                      - name: DOCKER_IMAGE_NAME
+                        type: String
+                        value: mascotas-backend-app
+                      - name: DOCKER_GKE_GIT_REPO
+                        type: String
+                        value: GCP/gke-config-files
+                      - name: ARTEFACTO_ID
+                        type: String
+                        value: gke-gnp-mascotas-backed
+                      - name: ARTEFACTO_GROUP_ID
+                        type: String
+                        value: mx/com/gnp/service
+                      - name: ARTEFACTO_TYPE
+                        type: String
+                        value: jar
+                      - name: ENV
+                        type: String
+                        value: pro
+                      - name: NEXUS_ENDPOINT
+                        type: String
+                        value: http://nexus.gnp.mx
+                      - name: NEXUS_PACKAGE
+                        type: String
+                        value: repository/maven-releases
+            - stage:
+                identifier: Despliegue_PROD
+                template:
+                  templateInputs:
+                    type: Deployment
+                    spec:
+                      environment:
+                        environmentRef: pro_zm7a
+                        infrastructureDefinitions:
+                          - identifier: gke_gnp_mascotas_pro_zm7a
+                            inputs:
+                              identifier: gke_gnp_mascotas_pro_zm7a
+                              type: KubernetesDirect
+                              spec:
+                                namespace: default
+          properties:
+            ci:
+              codebase:
+                connectorRef: account.gnp_gitlab_gitlab_connector_ujj8
+                repoName: cotizadores/gke-gnp-mascotas-backed
+                build:
+                  type: PR
+                  spec:
+                    number: <+trigger.prNumber>

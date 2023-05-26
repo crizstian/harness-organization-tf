@@ -10,6 +10,18 @@ pipeline:
     templateInputs:
       stages:
         - stage:
+            identifier: Terraform_STO
+            template:
+              templateInputs:
+                type: SecurityTests
+                variables:
+                  - name: k8s_connector_ref
+                    type: String
+                    value: <+input>
+                  - name: docker_connector_ref
+                    type: String
+                    value: <+input>
+        - stage:
             identifier: Terraform
             type: Deployment
             spec:
@@ -52,3 +64,9 @@ pipeline:
               - name: TERRAFORM_BRANCH
                 type: String
                 value: <+input>.default(${TERRAFORM_BRANCH})
+      properties:      
+        ci:        
+          codebase:          
+            connectorRef: <+input>          
+            repoName: <+input>          
+            build: <+input>

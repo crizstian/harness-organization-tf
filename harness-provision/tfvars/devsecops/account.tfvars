@@ -5,9 +5,10 @@ remote_state = {
 }
 
 harness_platform_default_connectors = {
-  aws_connector    = "cristian_aws"
-  docker_connector = "cristian_docker"
-  gcp_connector    = "cristian_gcp"
-  github_connector = "cristian_github"
-  gitlab_connector = "cristian_gitlab"
+  aws_connector        = "cristian_aws"
+  docker_connector     = "cristian_docker"
+  gcp_connector        = "cristian_gcp"
+  github_connector     = "cristian_github"
+  gitlab_connector     = "cristian_gitlab"
+  kubernetes_connector = "cristian-k8s-tf"
 }
