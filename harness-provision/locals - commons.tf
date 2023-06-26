@@ -44,4 +44,10 @@ locals {
       ]...
     )
   }
+
+  common_values = {
+    org_id     = element([for org, details in local.organizations : details.identifier if lower(org) == lower(try(var.organization, ""))], 0)
+    project_id = element([for prj, details in local.projects : details.identifier if lower(prj) == lower(try(var.project, ""))], 0)
+  }
+
 }

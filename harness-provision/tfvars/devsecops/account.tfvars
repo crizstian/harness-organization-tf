@@ -4,6 +4,9 @@ remote_state = {
   prefix    = "cristian_lab_account"
 }
 
+organization = "Cristian DevSecOps TF"
+project      = "Organization Setup"
+
 harness_platform_default_connectors = {
   aws_connector        = "cristian_aws"
   docker_connector     = "cristian_docker"

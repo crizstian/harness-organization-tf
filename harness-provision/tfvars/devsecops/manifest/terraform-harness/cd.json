@@ -1,9 +1,9 @@
 {
     "CD": {
         "ENV": {
-            "HARNESS": {
+            "harness": {
                 "enable": true,
-                "infrastructure_id": "harness",
+                "infrastructure": "harness",
                 "type": "Production"
             }
         }

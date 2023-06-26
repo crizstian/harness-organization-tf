@@ -5,7 +5,9 @@ module "bootstrap_harness_connectors" {
   tags          = local.common_tags
   organizations = local.organizations
   projects      = local.projects
+  common_values = local.common_values
 }
+
 
 # Create Environments
 module "bootstrap_harness_environments" {
@@ -14,6 +16,7 @@ module "bootstrap_harness_environments" {
   tags                             = local.common_tags
   organizations                    = local.organizations
   projects                         = local.projects
+  common_values                    = local.common_values
   templates                        = local.templates
   connectors                       = local.connectors
   harness_platform_environments    = var.harness_platform_environments
@@ -27,6 +30,7 @@ module "bootstrap_harness_pipelines" {
   tags                       = local.common_tags
   organizations              = local.organizations
   projects                   = local.projects
+  common_values              = local.common_values
   connectors                 = local.connectors
   templates                  = local.templates
   harness_platform_pipelines = var.harness_platform_pipelines
@@ -39,6 +43,7 @@ module "bootstrap_harness_services" {
   tags                      = local.common_tags
   organizations             = local.organizations
   projects                  = local.projects
+  common_values             = local.common_values
   connectors                = local.connectors
   templates                 = local.templates
   harness_platform_services = local.harness_platform_services
@@ -49,12 +54,15 @@ module "bootstrap_harness_inputsets" {
   source                     = "git::https://github.com/crizstian/harness-terraform-modules.git//harness-inputset?ref=refactor"
   suffix                     = random_string.suffix.id
   tags                       = local.common_tags
+  common_values              = local.common_values
   organizations              = local.organizations
   projects                   = local.projects
   connectors                 = local.connectors
   templates                  = local.templates
   harness_platform_services  = local.harness_platform_services
-  pipelines                  = module.bootstrap_harness_pipelines.pipelines
+  environments               = module.bootstrap_harness_environments.environment
+  infrastructures            = module.bootstrap_harness_environments.infrastructure
+  pipelines                  = module.bootstrap_harness_pipelines.pipeline
   harness_platform_inputsets = var.harness_platform_inputsets
 }
 
@@ -63,12 +71,15 @@ module "bootstrap_harness_triggers" {
   source                    = "git::https://github.com/crizstian/harness-terraform-modules.git//harness-trigger?ref=refactor"
   suffix                    = random_string.suffix.id
   tags                      = local.common_tags
+  common_values             = local.common_values
   organizations             = local.organizations
   projects                  = local.projects
   connectors                = local.connectors
   templates                 = local.templates
   harness_platform_services = local.harness_platform_services
-  pipelines                 = module.bootstrap_harness_pipelines.pipelines
+  environments              = module.bootstrap_harness_environments.environment
+  infrastructures           = module.bootstrap_harness_environments.infrastructure
+  pipelines                 = module.bootstrap_harness_pipelines.pipeline
   inputsets                 = module.bootstrap_harness_inputsets
   harness_platform_triggers = var.harness_platform_triggers
 }

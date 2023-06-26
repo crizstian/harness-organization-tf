@@ -12,6 +12,7 @@
                 "template_version": "1",
                 "template_level": "account"
             }
-        }
+        },
+        "manifest": {}
     }
 }

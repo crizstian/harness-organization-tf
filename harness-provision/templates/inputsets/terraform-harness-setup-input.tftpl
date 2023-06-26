@@ -29,7 +29,7 @@ inputSet:
                 environment:
                   environmentRef: ${env_id}
                   infrastructureDefinitions:
-                    - identifier: ${infrastructure_id}_${suffix}
+                    - identifier: ${infrastructure_id}
               variables:
                 - name: GCS_BUCKET
                   type: String
@@ -58,15 +58,17 @@ inputSet:
                 - name: TERRAFORM_FOLDER
                   type: String
                   value: "${TERRAFORM_FOLDER}"
-                - name: TERRAFORM_BRANCH
-                  type: String
-                  value: "${TERRAFORM_BRANCH}"
         properties:
           ci:
             codebase:
-              connectorRef: ${github_connector_id}
-              repoName: ${TERRAFORM_REPO}
               build:
                 type: branch
                 spec:
-                  branch: "${TERRAFORM_BRANCH}"
+                  branch: ""
+        variables:         
+          - name: GITHUB_CONNECTOR_ID            
+            type: String            
+            value: ${github_connector_id}          
+          - name: TERRAFORM_REPO            
+            type: String            
+            value: ${TERRAFORM_REPO}

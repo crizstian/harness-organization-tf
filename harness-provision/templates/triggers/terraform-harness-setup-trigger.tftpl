@@ -10,9 +10,9 @@ trigger:
   source:
     type: Webhook
     spec:
-      type: Gitlab
+      type: Github
       spec:
-        type: MergeRequest
+        type: PullRequest
         spec:
           connectorRef: ${github_connector_id}
           autoAbortPreviousExecutions: true
@@ -25,14 +25,25 @@ trigger:
           actions:
             - Open
             - Reopen
-            - Sync
-            - Update
+            - Synchronize
   inputYaml: |
     pipeline:
       identifier: ${pipeline_id}
       template:
         templateInputs:
           stages:
+            - stage:
+                identifier: Terraform_STO
+                template:
+                  templateInputs:
+                    type: SecurityTests
+                    variables:
+                      - name: k8s_connector_ref
+                        type: String
+                        value: ${k8s_connector_id}
+                      - name: docker_connector_ref
+                        type: String
+                        value: ${docker_connector_id}
             - stage:
                 identifier: Terraform
                 type: Deployment
@@ -42,7 +53,7 @@ trigger:
                   environment:
                     environmentRef: ${env_id}
                     infrastructureDefinitions:
-                      - identifier: ${infrastructure_id}_${suffix}
+                      - identifier: ${infrastructure_id}
                 variables:
                   - name: GCS_BUCKET
                     type: String
@@ -65,12 +76,24 @@ trigger:
                   - name: TERRAFORM_ACTION
                     type: String
                     value: ${TERRAFORM_ACTION}
-                  - name: TERRAFORM_REPO
-                    type: String
-                    value: ${TERRAFORM_REPO}
                   - name: TERRAFORM_FOLDER
                     type: String
                     value: ${TERRAFORM_FOLDER}
-                  - name: TERRAFORM_BRANCH
+                  - name: DELEGATE_SELECTOR
                     type: String
-                    value: ${TERRAFORM_BRANCH}
+                    value: ${DELEGATE_SELECTOR}
+          properties:
+            ci:            
+              codebase:              
+                connectorRef: ${github_connector_id}            
+                build:                
+                  type: branch                
+                  spec:                  
+                    branch: <+trigger.sourceBranch>
+          variables:
+            - name: GITHUB_CONNECTOR_ID
+              type: String
+              value: ${github_connector_id}
+            - name: TERRAFORM_REPO
+              type: String
+              value: ${TERRAFORM_REPO}

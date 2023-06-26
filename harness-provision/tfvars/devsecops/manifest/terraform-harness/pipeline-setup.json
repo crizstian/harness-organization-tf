@@ -4,6 +4,7 @@
             "INPUTSET": {
                 "DEFAULT_INPUT": {
                     "enable": true,
+                    "type": "Production",
                     "VALUES": {
                         "GCS_BUCKET": "crizstian-terraform",
                         "GCS_PREFIX": "cristian_lab_account",
@@ -21,6 +22,7 @@
             "TRIGGER": {
                 "PR_TRIGGER": {
                     "enable": true,
+                    "type": "Production",
                     "VALUES": {
                         "SOURCE_BRANCH": "",
                         "TARGET_BRANCH": "master,main",
@@ -38,6 +40,7 @@
             "INPUTSET": {
                 "DEFAULT_INPUT": {
                     "enable": true,
+                    "type": "Production",
                     "VALUES": {
                         "GCS_BUCKET": "crizstian-terraform",
                         "GCS_PREFIX": "cristian_lab_org",
@@ -55,6 +58,7 @@
             "TRIGGER": {
                 "PR_TRIGGER": {
                     "enable": true,
+                    "type": "Production",
                     "VALUES": {
                         "SOURCE_BRANCH": "",
                         "TARGET_BRANCH": "master,main",

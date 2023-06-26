@@ -1,4 +1,12 @@
 variable "remote_state" {}
+variable "organization" {
+  description = "default value"
+  default     = ""
+}
+variable "project" {
+  description = "default value"
+  default     = ""
+}
 # Harness Platform Entities
 variable "harness_platform_default_connectors" {
   description = "Harness default connectors for the org"
