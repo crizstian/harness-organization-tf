@@ -30,7 +30,11 @@ pipeline:
                                   store:
                                     type: Github
                                     spec:
-                                      paths: <+input>
+                                      paths: 
+                                        - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/account.tfvars"
+                                        - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/projects.tfvars"
+                                        - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/connectors.tfvars"
+                                        - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/templates.tfvars"
               environment:
                 environmentRef: ${ENVIRONMENT_NAME}_${suffix}
                 infrastructureDefinitions:
