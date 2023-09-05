@@ -11,10 +11,10 @@ harness_platform_inputsets = {
       TERRAFORM_FOLDER = "harness-provision"
       TERRAFORM_BRANCH = "main"
       paths = [
-        "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/account.tfvars",
-        "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/projects.tfvars",
-        "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/connectors.tfvars",
-        "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/templates.tfvars"
+        "account.tfvars",
+        "projects.tfvars",
+        "connectors.tfvars",
+        "templates.tfvars"
       ]
     }
   }
@@ -30,14 +30,14 @@ harness_platform_inputsets = {
       TERRAFORM_FOLDER = "harness-provision"
       TERRAFORM_BRANCH = "main"
       paths = [
-        "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/account.tfvars",
-        "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/connectors.tfvars",
-        "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/environments.tfvars",
-        "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/services.tfvars",
-        "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/pipelines.tfvars",
-        "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/inputsets.tfvars",
-        "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/triggers.tfvars",
-        "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/variables.tfvars"
+        "account.tfvars",
+        "connectors.tfvars",
+        "environments.tfvars",
+        "services.tfvars",
+        "pipelines.tfvars",
+        "inputsets.tfvars",
+        "triggers.tfvars",
+        "variables.tfvars"
       ]
     }
   }
