@@ -30,7 +30,10 @@ inputSet:
                                       type: Github
                                       spec:
                                         paths:
-                                          ${indent(42, yamlencode(paths))}
+                                          - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/account.tfvars"
+                                          - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/projects.tfvars"
+                                          - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/connectors.tfvars"
+                                          - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/templates.tfvars"
               variables:
                 - name: GCS_BUCKET
                   type: String
