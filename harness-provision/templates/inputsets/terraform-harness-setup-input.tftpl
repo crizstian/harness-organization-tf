@@ -30,13 +30,13 @@ inputSet:
                                       type: Github
                                       spec:
                                         paths:
-                                          %{ if "${TERRAFORM_REPO}" = "harness-bootstrap-tf" }
+                                          %{ if "${TERRAFORM_REPO}" == "harness-bootstrap-tf" }
                                           - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/account.tfvars"
                                           - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/projects.tfvars"
                                           - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/connectors.tfvars"
                                           - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/templates.tfvars"
                                           %{ endif }
-                                          %{ if "${TERRAFORM_REPO}" = "harness-organization-tf" }
+                                          %{ if "${TERRAFORM_REPO}" == "harness-organization-tf" }
                                           - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/account.tfvars"
                                           - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/connectors.tfvars"
                                           - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/environments.tfvars"
