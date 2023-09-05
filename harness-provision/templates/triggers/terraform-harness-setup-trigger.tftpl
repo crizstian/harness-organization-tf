@@ -86,6 +86,7 @@ trigger:
             ci:            
               codebase:              
                 connectorRef: ${github_connector_id}            
+                repoName: ${TERRAFORM_REPO}        
                 build:                
                   type: branch                
                   spec:                  

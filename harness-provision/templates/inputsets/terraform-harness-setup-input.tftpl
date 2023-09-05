@@ -9,66 +9,47 @@ inputSet:
       templateInputs:
         stages:
           - stage:
-              identifier: Terraform_STO
-              template:
-                templateInputs:
-                  type: SecurityTests
-                  variables:
-                    - name: k8s_connector_ref
-                      type: String
-                      value: ${k8s_connector_id}
-                    - name: docker_connector_ref
-                      type: String
-                      value: ${docker_connector_id}
-          - stage:
               identifier: Terraform
               type: Deployment
               spec:
-                service:
-                  serviceRef: ${service_id}
-                environment:
-                  environmentRef: ${env_id}
-                  infrastructureDefinitions:
-                    - identifier: ${infrastructure_id}
+                service:                
+                  serviceRef: ${custom_service_id}
+                execution:
+                  steps:
+                    - step:
+                        identifier: Terraform_Plan
+                        type: TerraformPlan
+                        spec:
+                          configuration:
+                            varFiles:
+                              - varFile:
+                                  identifier: tfvars
+                                  type: Remote
+                                  spec:
+                                    store:
+                                      type: Github
+                                      spec:
+                                        paths:
+                                          ${indent(42, yamlencode(paths))}
               variables:
                 - name: GCS_BUCKET
                   type: String
-                  value: "${GCS_BUCKET}"
+                  value: ${GCS_BUCKET}
                 - name: GCS_PREFIX
                   type: String
-                  value: "${GCS_PREFIX}"
-                - name: HARNESS_ACCOUNT_ID
-                  type: String
-                  value: "${HARNESS_ACCOUNT_ID}"
-                - name: HARNESS_PLATFORM_API_KEY
-                  type: Secret
-                  value: "${HARNESS_PLATFORM_API_KEY}"
-                - name: GOOGLE_BACKEND_CREDENTIALS
-                  type: Secret
-                  value: "${GOOGLE_BACKEND_CREDENTIALS}"
+                  value: ${GCS_PREFIX}
                 - name: TERRAFORM_WORKSPACE
                   type: String
-                  value: "${TERRAFORM_WORKSPACE}"
+                  value: ""
                 - name: TERRAFORM_ACTION
                   type: String
-                  value: "${TERRAFORM_ACTION}"
-                - name: TERRAFORM_REPO
-                  type: String
-                  value: "${TERRAFORM_REPO}"
+                  value: "apply"
                 - name: TERRAFORM_FOLDER
                   type: String
-                  value: "${TERRAFORM_FOLDER}"
-        properties:
-          ci:
-            codebase:
-              build:
-                type: branch
-                spec:
-                  branch: ""
-        variables:         
-          - name: GITHUB_CONNECTOR_ID            
-            type: String            
-            value: ${github_connector_id}          
-          - name: TERRAFORM_REPO            
-            type: String            
+                  value: ${TERRAFORM_FOLDER}
+        variables:
+          - name: TERRAFORM_REPO
+            type: String
             value: ${TERRAFORM_REPO}
+        delegateselectors:        
+          - ${DELEGATE_SELECTOR}

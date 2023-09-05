@@ -1,11 +1,11 @@
 remote_state = {
   workspace = "devsecops"
   bucket    = "crizstian-terraform"
-  prefix    = "cristian_lab_account"
+  prefix    = "cristian-harness-ng"
 }
 
-organization = "Cristian DevSecOps TF"
-project      = "Organization Setup"
+organization = "Cristian_Labs"
+project      = "Platform Engineering Team"
 
 harness_platform_default_connectors = {
   aws_connector        = "cristian_aws"

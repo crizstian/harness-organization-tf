@@ -1,0 +1,23 @@
+{
+    "SERVICE_DEFINITION": {
+        "enable": true,
+        "name": "harness-organization",
+        "type": "custom",
+        "artifacts": {
+            "terraform": true
+        },
+        "variables": [
+            {
+                "type": "String",
+                "name": "NAMESPACE",
+                "value": "default",
+                "required": false
+            }
+        ],
+        "settings": {
+            "inputsets": {
+                "Organization Configuration": true
+            }
+        }
+    }
+}

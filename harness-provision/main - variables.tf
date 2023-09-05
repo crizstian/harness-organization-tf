@@ -12,10 +12,6 @@ variable "harness_platform_default_connectors" {
   description = "Harness default connectors for the org"
   default     = {}
 }
-variable "harness_platform_kubernetes_connectors" {
-  description = "Harness Organizations to be created in the given Harness account"
-  default     = {}
-}
 
 variable "harness_platform_environments" {
   description = "Harness Organizations to be created in the given Harness account"
@@ -52,4 +48,7 @@ variable "harness_platform_variables" {
   default     = {}
 }
 
-
+variable "harness_platform_service_configs" {
+  description = "Harness Organizations to be created in the given Harness account"
+  default     = {}
+}
