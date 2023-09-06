@@ -1,0 +1,60 @@
+pipeline:
+  name: ${name}
+  identifier: ${identifier}
+  orgIdentifier: ${org_id}
+  projectIdentifier: ${project_id}
+  template:
+    templateRef: ${pipeline.template_id}
+    versionLabel: "${pipeline.template_version}"
+    templateInputs:
+      stages:
+        - stage:
+            identifier: Terraform
+            type: Deployment
+            spec:
+              service:
+                serviceRef: <+input>
+                serviceInputs: <+input>
+              execution:
+                steps:
+                  - step:
+                      identifier: Terraform_Plan
+                      type: TerraformPlan
+                      spec:
+                        configuration:
+                          varFiles:
+                            - varFile:
+                                identifier: tfvars
+                                type: Remote
+                                spec:
+                                  store:
+                                    type: Github
+                                    spec:
+                                      paths: <+input>
+              environment:
+                environmentRef: <+input>
+                environmentInputs: <+input>
+                serviceOverrideInputs: <+input>
+                infrastructureDefinitions: <+input>
+            variables:
+              - name: GCS_BUCKET
+                type: String
+                value: <+input>
+              - name: GCS_PREFIX
+                type: String
+                value: <+input>
+              - name: TERRAFORM_WORKSPACE
+                type: String
+                value: <+input>
+              - name: TERRAFORM_ACTION
+                type: String
+                value: <+input>.allowedValues(apply,destroy)
+              - name: TERRAFORM_FOLDER
+                type: String
+                value: <+input>
+      variables:
+        - name: TERRAFORM_REPO
+          type: String
+          value: <+input>
+      delegateSelectors: 
+        - ${DELEGATE_SELECTOR}
