@@ -13,7 +13,7 @@ harness_platform_service_configs = {
     }
     MANIFESTS = {}
     PIPELINE = {
-      "Terraform Pipeline" = {
+      "Terraform GCP Infrastructure Pipeline" = {
         INPUTSET = true
       }
     }

@@ -1,5 +1,5 @@
 harness_platform_inputsets = {
-  "Terraform Pipeline" = {
+  "Terraform GCP Infrastructure Pipeline" = {
     enable      = true
     description = "Inputset registered by terraform harness provider"
     type        = "CD"
