@@ -18,6 +18,18 @@
             "inputsets": {
                 "Account Configuration": true
             }
+        },
+        "default_values": {
+            "GCS_PREFIX": "cristian-harness-ng",
+            "TERRAFORM_REPO": "harness-bootstrap-tf",
+            "TERRAFORM_FOLDER": "harness-provision",
+            "TERRAFORM_BRANCH": "main",
+            "paths": [
+                "account.tfvars",
+                "projects.tfvars",
+                "connectors.tfvars",
+                "templates.tfvars"
+            ]
         }
     }
 }

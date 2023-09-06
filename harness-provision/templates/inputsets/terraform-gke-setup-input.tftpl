@@ -1,0 +1,59 @@
+inputSet:
+  name: "${name}"
+  identifier: "${identifier}"
+  orgIdentifier: "${org_id}"
+  projectIdentifier: "${project_id}"
+  pipeline:
+    identifier: "${pipeline_id}"
+    template:
+      templateInputs:
+        stages:
+          - stage:
+              identifier: Terraform
+              type: Deployment
+              spec:
+                service:                
+                  serviceRef: ${custom_service_id}
+                execution:
+                  steps:
+                    - step:
+                        identifier: Terraform_Plan
+                        type: TerraformPlan
+                        spec:
+                          configuration:
+                            varFiles:
+                              - varFile:
+                                  identifier: tfvars
+                                  type: Remote
+                                  spec:
+                                    store:
+                                      type: Github
+                                      spec:
+                                        paths:
+                                          - "provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/vars.tfvars"
+                environment:                  
+                  environmentRef: ${env_id}                
+                  infrastructureDefinitions:                    
+                    - identifier: ${custom_infrastructure_id}
+              variables:
+                - name: GCS_BUCKET
+                  type: String
+                  value: ${GCS_BUCKET}
+                - name: GCS_PREFIX
+                  type: String
+                  value: ${GCS_PREFIX}
+                - name: TERRAFORM_WORKSPACE
+                  type: String
+                  value: ""
+                - name: TERRAFORM_ACTION
+                  type: String
+                  value: "apply"
+                - name: TERRAFORM_FOLDER
+                  type: String
+                  value: ${TERRAFORM_FOLDER}
+        variables:
+          - name: TERRAFORM_REPO
+            type: String
+            value: ${TERRAFORM_REPO}
+        delegateselectors:        
+          - ${DELEGATE_SELECTOR}

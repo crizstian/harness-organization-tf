@@ -1,0 +1,26 @@
+{
+    "SERVICE_DEFINITION": {
+        "enable": true,
+        "name": "harness-selatam-gke",
+        "type": "custom",
+        "artifacts": {
+            "terraform": true
+        },
+        "variables": [
+            {
+                "type": "String",
+                "name": "NAMESPACE",
+                "value": "default",
+                "required": false
+            }
+        ],
+        "default_values": {
+            "GCS_PREFIX": "cristian_gke",
+            "TERRAFORM_REPO": "terraform-provision-gke-cluster",
+            "TERRAFORM_FOLDER": "provision",
+            "paths": [
+                "vars.tfvars"
+            ]
+        }
+    }
+}

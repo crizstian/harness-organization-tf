@@ -32,9 +32,10 @@ pipeline:
                                     spec:
                                       paths: <+input>
               environment:
-                environmentRef: ${ENVIRONMENT_NAME}_${suffix}
-                infrastructureDefinitions:
-                  - identifier: ${ENVIRONMENT_NAME}_${suffix}
+                environmentRef: <+input>                
+                environmentInputs: <+input>                
+                serviceOverrideInputs: <+input>                
+                infrastructureDefinitions: <+input>
             variables:
               - name: GCS_BUCKET
                 type: String

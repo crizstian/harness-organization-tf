@@ -18,6 +18,22 @@
             "inputsets": {
                 "Organization Configuration": true
             }
+        },
+        "default_values": {
+            "GCS_PREFIX": "cristian-harness-ng-org",
+            "TERRAFORM_REPO": "harness-organization-tf",
+            "TERRAFORM_FOLDER": "harness-provision",
+            "TERRAFORM_BRANCH": "main",
+            "paths": [
+                "account.tfvars",
+                "connectors.tfvars",
+                "environments.tfvars",
+                "services.tfvars",
+                "pipelines.tfvars",
+                "inputsets.tfvars",
+                "triggers.tfvars",
+                "variables.tfvars"
+            ]
         }
     }
 }
