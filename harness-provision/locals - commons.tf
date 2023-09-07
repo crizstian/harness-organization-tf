@@ -19,6 +19,12 @@ locals {
       kubernetes_connectors = merge(
         try(data.terraform_remote_state.global.outputs.connectors.all.kubernetes_connectors, {}),
         try(data.terraform_remote_state.state.outputs.connectors.all.kubernetes_connectors, {}),
+        {
+          "${data.harness_platform_connector_kubernetes.account.name}" = {
+            identifier  = "account.${data.harness_platform_connector_kubernetes.account.identifier}"
+            environment = "pro"
+          }
+        }
       )
     },
     module.bootstrap_harness_connectors.all

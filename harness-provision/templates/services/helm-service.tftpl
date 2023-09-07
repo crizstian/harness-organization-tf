@@ -5,6 +5,10 @@ service:
   tags: {}
   serviceDefinition:
     spec:
+      %{ if length(variables) > 0 }
+      variables:
+        ${indent(8, yamlencode(variables))}
+      %{ endif }
       %{ if length(manifests) > 0 }
       manifests:
       %{ for manifest in manifests }

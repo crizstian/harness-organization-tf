@@ -1,0 +1,15 @@
+infrastructureDefinition:
+  name: ${name}
+  identifier: ${identifier}
+  description: ${description}
+  tags: {}
+  orgIdentifier: ${org_id}
+  projectIdentifier: ${project_id}
+  environmentRef: ${env_id}
+  deploymentType: NativeHelm
+  type: KubernetesDirect
+  spec:
+    connectorRef: ${connector_id}
+    namespace: <+serviceVariables.NAMESPACE>
+    releaseName: r-<+INFRA_KEY>
+  allowSimultaneousDeployments: false

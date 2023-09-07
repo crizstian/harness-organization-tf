@@ -1,4 +1,5 @@
 harness_platform_kubernetes_connectors = {}
+
 harness_platform_helm_connectors = {
   "prometheus-helm" = {
     enable      = true

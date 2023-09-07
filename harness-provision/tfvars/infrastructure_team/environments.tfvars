@@ -35,9 +35,10 @@ harness_platform_infrastructures = {
       }
     }
   }
-  /* "helm" = {
-    description = "Infrastructure registered by terraform harness provider"
-    type        = "KubernetesDirect"
-    yaml        = "./templates/infrastructure/helm-infrastructure.tftpl"
-  } */
+  "kubernetes" = {
+    description    = "Infrastructure registered by terraform harness provider"
+    type           = "KubernetesDirect"
+    deploymentType = "NativeHelm"
+    yaml           = "./templates/infrastructure/helm.tftpl"
+  }
 }
