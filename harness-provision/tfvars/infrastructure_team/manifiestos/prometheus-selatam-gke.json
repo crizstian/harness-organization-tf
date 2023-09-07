@@ -16,7 +16,7 @@
         ],
         "default_values": {
             "GCS_PREFIX": "cristian_gke",
-            "TERRAFORM_REPO": "terraform-provision-gke-cluster",
+            "TERRAFORM_REPO": "terraform-gke",
             "TERRAFORM_FOLDER": "provision",
             "paths": [
                 "vars.tfvars"

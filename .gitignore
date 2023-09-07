@@ -5,7 +5,6 @@ contrib/examples/vars.tf
 .kube
 contrib/manifests/*.yml
 harness-provision/*.yml
-sales*.json
 .DS_Store
 contrib/scripts/start
 contrib/scripts/plan

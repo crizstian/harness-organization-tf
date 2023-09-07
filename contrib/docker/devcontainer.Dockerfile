@@ -69,3 +69,5 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 RUN gcloud components install gke-gcloud-auth-plugin --quiet
 
 WORKDIR /workspace
+
+RUN pre-commit install
