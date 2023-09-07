@@ -1,0 +1,34 @@
+{
+    "SERVICE_DEFINITION": {
+        "enable": true,
+        "name": "prometheus-selatam",
+        "type": "helm",
+        "artifacts": {
+            "helm": true
+        },
+        "variables": [
+            {
+                "type": "String",
+                "name": "NAMESPACE",
+                "value": "default",
+                "required": false
+            }
+        ],
+        "CONNECTORS": {
+            "helm": "prometheustest"
+        },
+        "MANIFESTS": {
+            "helm": {
+                "type": "HelmChart",
+                "chartName": "prometheus-community",
+                "chartVersion": "",
+                "helmVersion": "V3",
+                "commandFlags": {
+                    "Upgrade": {
+                        "flag": "--install prometheus prometheus-community/prometheus -namespace prometheus --create-namespace"
+                    }
+                }
+            }
+        }
+    }
+}

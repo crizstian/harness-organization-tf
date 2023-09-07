@@ -18,6 +18,18 @@ harness_platform_service_configs = {
       }
     }
   }
+  helm = {
+    description = "Service registered by terraform harness provider"
+    tags        = []
+    yaml        = "./templates/services/helm-service.tftpl"
+    type        = "helm"
+    MANIFESTS   = {}
+    PIPELINE = {
+      /* "Helm Deployment Pipeline" = {
+        INPUTSET = true
+      } */
+    }
+  }
 }
 
 

@@ -1,0 +1,14 @@
+service:
+  name: ${name}
+  identifier: ${identifier}
+  description: ${description}
+  tags: {}
+  serviceDefinition:
+    spec:
+      %{ if length(manifests) > 0 }
+      manifests:
+      %{ for manifest in manifests }
+        - ${indent(9, manifest)}
+      %{ endfor }
+      %{ endif }
+    type: NativeHelm

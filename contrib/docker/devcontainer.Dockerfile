@@ -36,8 +36,10 @@ RUN GO111MODULE=on  go install github.com/uudashr/gopkgs/v2/cmd/gopkgs@latest
 RUN GO111MODULE=on  go install github.com/cuonglm/gocmt@latest
 RUN GO111MODULE=on  go install github.com/go-task/task/v3/cmd/task@latest
 RUN GO111MODULE=on  go install github.com/terraform-linters/tflint@latest
+RUN GO111MODULE=on  go install github.com/zricethezav/gitleaks/v8@latest
 RUN rm -rf $GOPATH/pkg/* $GOPATH/src/* /root/.cache/go-build
 RUN go env -w GOPRIVATE=github.com/crizstian
+RUN pip install pre-commit
 
 # Download Terraform
 RUN git clone --depth=1 https://github.com/tfutils/tfenv.git ~/.tfenv && \ 
