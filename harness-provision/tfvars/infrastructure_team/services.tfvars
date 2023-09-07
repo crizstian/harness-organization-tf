@@ -23,7 +23,6 @@ harness_platform_service_configs = {
     tags        = []
     yaml        = "./templates/services/helm-service.tftpl"
     type        = "helm"
-    MANIFESTS   = {}
     PIPELINE = {
       /* "Helm Deployment Pipeline" = {
         INPUTSET = true

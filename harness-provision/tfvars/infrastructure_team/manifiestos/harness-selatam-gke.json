@@ -18,6 +18,7 @@
             "GCS_PREFIX": "cristian_gke",
             "TERRAFORM_REPO": "terraform-gke",
             "TERRAFORM_FOLDER": "provision",
+            "TERRAFORM_WORKSPACE": "selatam",
             "paths": [
                 "vars.tfvars"
             ]

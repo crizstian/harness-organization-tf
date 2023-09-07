@@ -17,7 +17,7 @@ vars:
     -var-file=./tfvars/$workspace/pipelines.tfvars \
     -var-file=./tfvars/$workspace/inputsets.tfvars \
     -var-file=./tfvars/$workspace/triggers.tfvars \
-    -var-file=./tfvars/$workspace/variables.tfvars 
+    -var-file=./tfvars/$workspace/variables.tfvars
 
 # ──────────────────────────────────────────────────────────────────────────────
 tasks:
@@ -25,6 +25,13 @@ tasks:
     silent: true
     cmds:
       - task --list
+  # ──────────────────────────────────────────────────────────────────────────────
+  gcp:
+    desc: GCP Authentication
+    summary: Generate SA GCP Authentication
+    aliases: [gcp, auth]
+    cmds:
+      - cmd: gcloud auth application-default login
   # ──────────────────────────────────────────────────────────────────────────────
   terraform:
     desc: Terraform execute
