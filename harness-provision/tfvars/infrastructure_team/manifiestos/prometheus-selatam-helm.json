@@ -10,7 +10,7 @@
             {
                 "type": "String",
                 "name": "NAMESPACE",
-                "value": "default",
+                "value": "prometheus",
                 "required": false
             }
         ],
@@ -25,7 +25,7 @@
                 "helmVersion": "V3",
                 "commandFlags": {
                     "Upgrade": {
-                        "flag": "--install prometheus prometheus-community/prometheus -namespace prometheus --create-namespace"
+                        "flag": "--install prometheus prometheus-community/prometheus -namespace <+serviceVariables.NAMESPACE> --create-namespace"
                     }
                 }
             }

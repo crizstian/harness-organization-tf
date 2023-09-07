@@ -11,5 +11,5 @@ infrastructureDefinition:
   spec:
     connectorRef: ${connector_id}
     namespace: <+serviceVariables.NAMESPACE>
-    releaseName: r-<+INFRA_KEY>
+    releaseName: r-<+serviceVariables.NAMESPACE>
   allowSimultaneousDeployments: false
