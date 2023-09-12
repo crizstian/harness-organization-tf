@@ -12,6 +12,13 @@ locals {
   projects      = data.terraform_remote_state.state.outputs.harness.projects
   /* usergroups    = data.terraform_remote_state.state.outputs.usergroups */
 
+  k8s_prometheus = terraform.workspace == "infrastructure_team" ? {
+    "${data.harness_platform_connector_kubernetes.account.name}" = {
+      identifier  = "account.${data.harness_platform_connector_kubernetes.account.identifier}"
+      environment = "pro"
+    }
+  } : {}
+
   all_connectors = merge(
     data.terraform_remote_state.global.outputs.connectors.all,
     data.terraform_remote_state.state.outputs.connectors.all,
@@ -19,12 +26,7 @@ locals {
       kubernetes_connectors = merge(
         try(data.terraform_remote_state.global.outputs.connectors.all.kubernetes_connectors, {}),
         try(data.terraform_remote_state.state.outputs.connectors.all.kubernetes_connectors, {}),
-        /* {
-          "${data.harness_platform_connector_kubernetes.account.name}" = {
-            identifier  = "account.${data.harness_platform_connector_kubernetes.account.identifier}"
-            environment = "pro"
-          }
-        } */
+        local.k8s_prometheus
       )
     },
     module.bootstrap_harness_connectors.all
