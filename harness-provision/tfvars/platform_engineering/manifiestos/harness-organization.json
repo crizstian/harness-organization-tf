@@ -24,6 +24,7 @@
             "TERRAFORM_REPO": "harness-organization-tf",
             "TERRAFORM_FOLDER": "harness-provision",
             "TERRAFORM_BRANCH": "main",
+            "TERRAFORM_WORKSPACE": "platform_engineering",
             "paths": [
                 "account.tfvars",
                 "connectors.tfvars",

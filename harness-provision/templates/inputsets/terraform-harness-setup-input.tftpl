@@ -46,6 +46,10 @@ inputSet:
                                           - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/triggers.tfvars"
                                           - "harness-provision/tfvars/<+stage.variables.TERRAFORM_WORKSPACE>/variables.tfvars"
                                           %{ endif }
+                environment:                  
+                  environmentRef: harness_${suffix}                 
+                  infrastructureDefinitions:                    
+                    - identifier: harness_harness_${suffix}             
               variables:
                 - name: GCS_BUCKET
                   type: String
@@ -55,7 +59,7 @@ inputSet:
                   value: ${GCS_PREFIX}
                 - name: TERRAFORM_WORKSPACE
                   type: String
-                  value: ""
+                  value: ${TERRAFORM_WORKSPACE}
                 - name: TERRAFORM_ACTION
                   type: String
                   value: "apply"

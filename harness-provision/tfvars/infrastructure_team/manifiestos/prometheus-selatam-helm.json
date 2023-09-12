@@ -10,7 +10,19 @@
             {
                 "type": "String",
                 "name": "NAMESPACE",
-                "value": "prometheus",
+                "value": "default",
+                "required": false
+            },
+            {
+                "type": "String",
+                "name": "EXPOSE",
+                "value": "true",
+                "required": false
+            },
+            {
+                "type": "String",
+                "name": "EXPOSE_CMD",
+                "value": "-n <+serviceVariables.NAMESPACE> r-<+<+<+service.name>.replace('_','')>.replace(' ','')>-server --type=NodePort --name=prometheus-service",
                 "required": false
             }
         ],
@@ -25,7 +37,7 @@
                 "helmVersion": "V3",
                 "commandFlags": {
                     "Upgrade": {
-                        "flag": "--install prometheus prometheus-community/prometheus -namespace <+serviceVariables.NAMESPACE> --create-namespace"
+                        "flag": "--install prometheus prometheus-community/prometheus -namespace <+serviceVariables.NAMESPACE>"
                     }
                 }
             }

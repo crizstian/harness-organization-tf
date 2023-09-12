@@ -31,6 +31,26 @@ pipeline:
                   spec:
                     skipDryRun: false
                     ignoreReleaseHistFailStatus: false
+              - step:
+                  type: ShellScript
+                  name: Expose Service
+                  identifier: Expose_Service
+                  spec:
+                    shell: Bash
+                    onDelegate: true
+                    source:
+                      type: Inline
+                      spec:
+                        script: |-
+                          export KUBECONFIG=$HARNESS_KUBE_CONFIG_PATH
+
+                          kubectl expose deployment <+serviceVariables.EXPOSE_CMD>
+                    environmentVariables: []
+                    outputVariables: []
+                  when:
+                    stageStatus: Success
+                    condition: <+<+serviceVariables.EXPOSE> == "true" >
+                  timeout: 10m
             rollbackSteps:
               - step:
                   name: Helm Rollback

@@ -11,5 +11,5 @@ infrastructureDefinition:
   spec:
     connectorRef: ${connector_id}
     namespace: <+serviceVariables.NAMESPACE>
-    releaseName: r-<+serviceVariables.NAMESPACE>
+    releaseName: r-<+<+<+service.name>.replace('_','')>.replace(' ','')>
   allowSimultaneousDeployments: false

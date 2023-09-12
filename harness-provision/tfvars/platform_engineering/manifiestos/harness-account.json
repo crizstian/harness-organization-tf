@@ -24,6 +24,7 @@
             "TERRAFORM_REPO": "harness-bootstrap-tf",
             "TERRAFORM_FOLDER": "harness-provision",
             "TERRAFORM_BRANCH": "main",
+            "TERRAFORM_WORKSPACE": "devsecops",
             "paths": [
                 "account.tfvars",
                 "projects.tfvars",
